@@ -26,7 +26,7 @@ export default {
   methods: {
     increment() {
       this.clicks += 1;
-      //            console.log("HAHAHDDDDA");
+                  console.log("HAHAHDDDDA");
     },
     decrement() {
       this.clicks -= 1;
