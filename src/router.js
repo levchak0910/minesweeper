@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Home from "./views/Home.vue";
 
 Vue.use(Router);
 
@@ -9,17 +8,20 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: "/",
-      component: Home,
+      path: "/game",
+      component: () => import(/* webpackChunkName: "game" */ "./views/Game.vue"),
     },
     {
       path: "/about",
-      component: () =>
-        import(/* webpackChunkName: "about" */ "./views/About.vue"),
+      component: () => import(/* webpackChunkName: "about" */ "./views/About.vue"),
     },
     {
-      path: "/math",
-      component: () => import(/* webpackChunkName: "math" */ "./views/Math.vue"),
+      path: "/records",
+      component: () => import(/* webpackChunkName: "records" */ "./views/Records.vue"),
+    },
+    {
+      path: "*",
+      redirect: "/game",
     },
   ],
 });
