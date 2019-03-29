@@ -33,7 +33,7 @@
     }
   },
   "lint-staged": {
-    "*.{js|vue}": [
+    "*.{js,vue}": [
       "npm run lint",
       "git add"
     ]
