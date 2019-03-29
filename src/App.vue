@@ -16,8 +16,5 @@ export default {
     Header,
     Footer,
   },
-  mounted() {
-    console.log("a");
-  }
 };
 </script>
