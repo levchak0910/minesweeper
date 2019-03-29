@@ -11,10 +11,10 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
 export default {
-  name: "Minesweeper",
-    components: {
-        Header,
-        Footer
-    }
+  name: "MinesweeperApp",
+  components: {
+    Header,
+    Footer,
+  },
 };
 </script>
