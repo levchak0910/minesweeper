@@ -12,12 +12,9 @@ import Footer from "@/components/layout/Footer";
 
 export default {
   name: "Minesweeper",
-  components: {
-    Header,
-    Footer,
-  },
-    mounted() {
-      console.log("some");
-    }
+    components: {
+        Header,
+        Footer
+    },
 };
 </script>

@@ -6,8 +6,7 @@
     "vue": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test": "vue-cli-service test:e2e",
-    "precommit": "npm run lint"
+    "test": "vue-cli-service test:e2e"
   },
   "dependencies": {
     "vue": "^2.6.6",
@@ -27,5 +26,10 @@
     "less": "^3.0.4",
     "less-loader": "^4.1.0",
     "vue-template-compiler": "^2.5.21"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
   }
 }
