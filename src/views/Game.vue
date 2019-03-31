@@ -6,32 +6,41 @@ div
     p width:
       input(
         type="number"
-        v-model="rows"
+        v-model.number="rows"
+        data-cy="width"
       )
     p height:
       input(
         type="number"
-        v-model="columns"
+        v-model.number="columns"
+        data-cy="height"
       )
-    p height:
+    p complexity:
       input(
         type="number"
         step="0.05"
         min="0"
         max="1"
         v-model="complexity"
+        data-cy="complexity"
       )
     button(
       @click="fillArea"
+      data-cy="fillArea"
     ) Fill the table
     button(
       @click="showMines=!showMines"
+      data-cy="showMines"
     ) Show mines
     button(
       @click="showMinesAround"
+      data-cy="showMinesAround"
     ) Show mines around
 
-  p(v-if="totalBombAmount!=0") Total amount of bombs: {{totalBombAmount}}
+  p(
+    v-if="totalBombAmount!=0"
+    data-cy="totalBombAmount"
+  ) Total amount of bombs: {{totalBombAmount}}
 
   table(
     cellpadding="0"
@@ -88,8 +97,10 @@ export default {
     },
     fillArea() {
       this.totalBombAmount = 0;
+      this.area = [];
+
       for (let row = 0; row < this.rows; row += 1) {
-        this.$set(this.area, row, Array(10));
+        this.$set(this.area, row, Array(this.columns));
 
         for (let column = 0; column < this.columns; column += 1) {
           const isBomb = this.getRandom();
@@ -105,6 +116,10 @@ export default {
           this.$set(this.area[row], column, cell);
         }
       }
+    },
+
+    hideArea() {
+      this.totalBombAmount = 0;
     },
 
     checkPosition(arrayOfPositions, [row, column]) {
@@ -123,7 +138,6 @@ export default {
 
         if (this.is("flag", row, column)) continue;
         if (this.is("bomb", row, column) && bombs != flags) continue;
-
 
         this.checkBomb(row, column);
 
@@ -151,7 +165,7 @@ export default {
 
       if (cell.isBomb) {
         alert("Game over!");
-        setTimeout(this.fillArea, 200);
+        this.hideArea();
         return;
       }
 
@@ -161,8 +175,8 @@ export default {
 
       // eslint-disable-next-line no-shadow
       if (!this.area.some(row => row.some(cell => cell.status == "unknown"))) {
-        alert("You win!");
-        setTimeout(this.fillArea, 200);
+        setTimeout(() => alert("You win!"), 200);
+        this.hideArea();
       }
     },
 

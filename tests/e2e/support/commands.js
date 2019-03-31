@@ -22,4 +22,32 @@
 //
 //
 // -- This is will overwrite an existing command --
-// Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+// Cypress.Commands.overwrite("visit", (originalFn, url, options = {}) => {
+//   originalFn(url, {
+//     onBeforeLoad(win) {
+//       cy.stub(win.alert);
+//     },
+//     ...options,
+//   });
+// });
+// Game.vue
+Cypress.Commands.add("registerElements", () => {
+  cy.get("[data-cy='width']").as("input-width")
+  cy.get("[data-cy='height']").as("input-height")
+  cy.get("[data-cy='complexity']").as("input-complexity")
+
+  cy.get("[data-cy='fillArea']").as("button-fillArea")
+  cy.get("[data-cy='showMines']").as("button-showMines")
+  cy.get("[data-cy='showMinesAround']").as("button-showMinesAround")
+})
+
+Cypress.Commands.add("fillArea", (rows, columns) => {
+  cy.get("@input-width").clear().type(rows)
+  cy.get("@input-height").clear().type(columns)
+  cy.get("@button-fillArea").click()
+})
+
+
+Cypress.Commands.add("setComplexity", (complexity) => {
+  cy.get("@input-complexity").clear().type(complexity)
+})

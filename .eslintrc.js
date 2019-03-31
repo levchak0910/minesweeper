@@ -17,6 +17,7 @@ module.exports = {
     "no-alert": "off",
     "no-continue": "off",
     "import/extensions": "off",
+    "spaced-comment": ["error", "always", { markers: ["/"] }],
   },
 
   parserOptions: {
