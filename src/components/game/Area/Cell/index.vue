@@ -39,13 +39,12 @@ export default {
   },
   methods: {
     ...mapActions({
-      _setFlag: "area/setFlag",
       _checkBomb: "area/checkBomb",
       _openArea: "area/openArea",
     }),
 
     setFlag() {
-      this._setFlag(this.position);
+      this.cell.setFlag();
     },
 
     checkBomb() {
