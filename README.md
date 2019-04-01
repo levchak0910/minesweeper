@@ -1,7 +1,7 @@
 # Minesweeper
 > Game "Minesweeper" implementation on Vue.js
 
-Demo: auto-minesweeper.herokuapp.com
+Demo: [heroku app](https://auto-minesweeper.herokuapp.com)
 
 ### Comands
 ```bash
