@@ -1,34 +1,15 @@
-# e2e
+# Minesweeper
+> Game "Minesweeper" implementation on Vue.js
 
-## Project setup
-```
-npm install
-```
+Demo: auto-minesweeper.herokuapp.com
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
+### Comands
+```bash
+npm run dev # development
+npm run build # production
+npm run test # e2e tests
+npm run lint # linter
 ```
 
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Run your end-to-end tests
-```
-npm run test:e2e
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### License
+This software is free to use under the MIT license.
