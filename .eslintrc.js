@@ -18,6 +18,7 @@ module.exports = {
     "no-continue": "off",
     "import/extensions": "off",
     "spaced-comment": ["error", "always", { markers: ["/"] }],
+    "no-underscore-dangle": ["error", { allowAfterThis: true }],
   },
 
   parserOptions: {

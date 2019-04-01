@@ -6,13 +6,11 @@ describe("Testing user stories", () => {
     cy.registerElements()
   })
 
-  it("should redirect to game", () => {
-    cy.visit("/")
 
-    cy.url().should("include", "/game")
-  })
+  // BUTTON Fill the area > CLICK
+  //  e: it should make the area and show bombs amount
 
-  it("should make the area", () => {
+  it("should make the area and show bombs amount", () => {
     cy.setComplexity(1)
     cy.fillArea(3, 3)
 
@@ -25,32 +23,114 @@ describe("Testing user stories", () => {
       .should("be.visible")
   })
 
-  it("should click on clear cell then open this cell", () => {
+
+  // BUTTON Show all bombs > CLICK
+  //  e: it should show all bombs, after hide them
+
+  it("should show all bombs, after hide them", () => {
+    cy.setComplexity(1)
+    cy.fillArea(2, 2)
+
+    cy
+      .get("@button-showMines")
+      .click()
+
+    cy.get("td").each((td) => {
+      expect(td).to.have.class("green")
+    })
+
+    cy
+      .get("@button-showMines")
+      .click()
+
+    cy.get("td").each((td) => {
+      expect(td).not.to.have.class("green")
+    })
+  })
+
+
+  // BUTTON Show number of all bombs around > CLICK
+  //  e: it should show number of amount bombs around cell, after hide them
+
+  it("should show number of amount bombs around cell, after hide them", () => {
+    cy.setComplexity(0)
+    cy.fillArea(2, 2)
+
+    cy
+      .get("@button-showMinesAround")
+      .click()
+
+    cy.get("td").each((td) => {
+      expect(td).text("0")
+    })
+
+    cy
+      .get("@button-showMinesAround")
+      .click()
+
+    cy.get("td").each((td) => {
+      expect(td).text("")
+    })
+  })
+
+
+  // GAME LOGIC > Win the game
+  //  e: it should win the game
+
+  it("should win the game", () => {
+    cy.setComplexity(0)
+    cy.fillArea(2, 2)
+    const stub = cy.stub()
+    cy.on("window:alert", stub)
+    cy.clock()
+
+    cy
+      .get("td").first()
+      .dblclick()
+      .tick(500)
+      .then(() => {
+        expect(stub).to.be.calledWith("You win!")
+      })
+  })
+
+
+  // Cell > RIGHT CLICK
+  //  if cell is unknown
+  //    e: it should toggle red class
+  //  if cell is demined
+  //    e: it should do nothing
+
+  it("should toggle a cell as a flag if cell is unknown", () => {
+    cy.fillArea(2, 2)
+
+    cy
+      .get("td").first()
+      .trigger("contextmenu")
+      .should("have.class", "red")
+      .trigger("contextmenu")
+      .should("not.have.class", "red")
+  })
+
+  it("should do nothing if cell is demined", () => {
     cy.setComplexity(0)
     cy.fillArea(2, 2)
 
     cy
       .get("td").first()
       .click()
-      .should("not.have.text")
-      .should("have.class", "white")
+      .trigger("contextmenu")
+      .should("not.have.class", "red")
   })
 
-  it("should double click on clear space then open all clear cells", () => {
-    cy.setComplexity(0)
-    cy.fillArea(3, 3)
 
-    cy
-      .get("td").first()
-      .dblclick()
+  // Cell > CLICK
+  //  if bomb
+  //    e: it should explode
+  //  if not a bomb
+  //    e: it should show nothing if no bombs around
+  //    e: it should show number of amount bombs around cell
 
-    cy.get("td").each((td) => {
-      expect(td).has.class("white")
-      expect(td).has.text("")
-    })
-  })
-
-  it("should click on cell then exlode", () => {
+  it("should exlode if a cell is a bomb", () => {
     cy.setComplexity(1)
     cy.fillArea(2, 2)
     const stub = cy.stub()
@@ -64,77 +144,41 @@ describe("Testing user stories", () => {
       })
   })
 
-  it("should win the game", () => {
+  it("should open a cell if there is no bomb", () => {
     cy.setComplexity(0)
     cy.fillArea(2, 2)
-    const stub = cy.stub()
-    cy.on("window:alert", stub)
-    cy.clock()
 
+    cy
+      .get("td").first()
+      .click()
+      .should("not.have.text")
+      .should("have.class", "white")
+  })
+
+
+  // Cell > DOUBLE CLICK
+  //  if there no bombs around
+  //    e: it should correctly open aria
+  //  if there are bombs around
+  //    if flag != bomb around
+  //      u: it should deny opening surround cells
+  //    if flag == bomb around
+  //      if flag are settled correctly
+  //        u: it should open surround cells
+  //      if flag are settled incorrectly
+  //        u: it should explode
+
+  it("it should correctly open aria if there no bombs around", () => {
+    cy.setComplexity(0)
+    cy.fillArea(3, 3)
 
     cy
       .get("td").first()
       .dblclick()
-      .tick(500)
-      .then(() => {
-        expect(stub).to.be.calledWith("You win!")
-      })
-  })
-
-  it("should mark a cell as a flag", () => {
-    cy.fillArea(2, 2)
-
-    cy
-      .get("td").first()
-      .trigger("contextmenu")
-      .should("have.class", "red")
-  })
-
-  it("should show all bombs", () => {
-    cy.setComplexity(1)
-    cy.fillArea(2, 2)
-
-    cy
-      .get("@button-showMines")
-      .click()
 
     cy.get("td").each((td) => {
-      expect(td).to.have.class("green")
+      expect(td).has.class("white")
+      expect(td).has.text("")
     })
   })
-
-  it("should show amount of bobms around cell", () => {
-    cy.setComplexity(0)
-    cy.fillArea(2, 2)
-
-    cy
-      .get("@button-showMinesAround")
-      .click()
-
-    cy.get("td").each((td) => {
-      expect(td).text("0")
-    })
-  })
-
-  // click
-  // - if bomb
-  // -- it("should explode", () => {})
-  // - if not a bomb
-  // -- it("should show nothing if no bombs around", () => {})
-  // -- it("should show number of amount bombs around", () => {})
-
-  // right click
-  //  it("should toggle red class", () => {})
-
-  // double click
-  //  if there no bombs around
-  //    it("should correctly open aria", () => {})
-  //  if there are bombs around
-  //    if flag != bomb around
-  //      it("should deny opening surround cells", () => {})
-  //    if flag == bomb around
-  //      if flag are settled correctly
-  //        it("should open surround cells", () => {})
-  //      if flag are settled incorrectly
-  //        it("should explode", () => {})
 })

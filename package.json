@@ -9,6 +9,7 @@
     "dev": "vue-cli-service serve --open"
   },
   "dependencies": {
+    "lodash": "^4.17.11",
     "vue": "^2.6.6",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
@@ -36,7 +37,10 @@
   },
   "lint-staged": {
     "linters": {
-      "*.{js,vue}": ["npm run lint", "git add"]
+      "*.{js,vue}": [
+        "npm run lint",
+        "git add"
+      ]
     }
   }
 }
