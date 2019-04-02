@@ -70,10 +70,9 @@ class Cell {
     else this.status = value;
   }
 
-  checkBomb() {
+  checkBomb(gameOverCallback) {
     if (this.isBomb) {
-      alert("Game over!");
-      // this.hideArea();
+      gameOverCallback();
       return;
     }
 
@@ -89,8 +88,16 @@ const state = {
 export const getters = {
 
   config: (s, g, rs, rootGetters) => rootGetters["config/config"],
+  area: state => state.area,
 
-  calculatedArea: state => state.area,
+  win: (state) => {
+    const cells = _.flattenDeep(state.area);
+    const deminedAmount = cells.filter(c => c.isDemined).length;
+    const bombAmount = cells.filter(c => c.isBomb).length;
+    const cellsAmount = cells.length;
+
+    return deminedAmount + bombAmount == cellsAmount;
+  },
 
   totalBombAmount(state) {
     return state.area.reduce((amount1, row) => (
@@ -135,20 +142,8 @@ export const mutations = {
     });
   },
 
-  checkBomb(state, [row, column]) {
-    state.area[row][column].checkBomb();
-  },
-
-  checkWin(state) {
-    const cells = _.flattenDeep(state.area);
-    const deminedAmount = cells.filter(c => c.isDemined).length;
-    const bombAmount = cells.filter(c => c.isBomb).length;
-    const cellsAmount = cells.length;
-
-    if (deminedAmount + bombAmount == cellsAmount) {
-      setTimeout(() => alert("You win!"), 200);
-      // this.hideArea();
-    }
+  checkBomb(state, { row, column, callback }) {
+    state.area[row][column].checkBomb(callback);
   },
 
 };
@@ -160,6 +155,7 @@ export const actions = {
     commit("fillArea", getters.config);
     const positions = await dispatch("generatePositions");
     commit("setBombs", positions);
+    dispatch("record/startTimer", null, { root: true });
   },
 
   generatePositions({ getters }) {
@@ -183,21 +179,49 @@ export const actions = {
     return bombPositions;
   },
 
-  async checkBomb({ commit }, position) {
-    commit("checkBomb", position);
-    commit("checkWin");
+  checkBomb({ commit, dispatch }, [row, column]) {
+    commit("checkBomb", {
+      row,
+      column,
+      callback: () => dispatch("gameOver"),
+    });
+    dispatch("checkWin");
   },
 
-  async openArea({ dispatch, state }, [row, column]) {
-    const cell = state.area[row][column];
-    const { bombs, flags } = cell.around;
-    if (bombs != flags) return alert("denied");
+  startGame({ dispatch }) {
+    dispatch("config/updateProperty", { property: "show.bombs", value: false }, { root: true });
+    dispatch("config/updateProperty", { property: "playing", value: true }, { root: true });
+    dispatch("fillArea");
+  },
+  gameOver({ dispatch }) {
+    alert("Game over!");
+    dispatch("endGame");
+  },
+  gameWon({ dispatch }) {
+    setTimeout(() => alert("You win!"), 200);
+    dispatch("endGame");
+  },
+  endGame({ dispatch }) {
+    dispatch("config/updateProperty", { property: "playing", value: false }, { root: true });
+    dispatch("config/updateProperty", { property: "show.bombs", value: true }, { root: true });
+    dispatch("record/stopTimer", { save: true }, { root: true });
+  },
+
+  checkWin({ getters, dispatch }) {
+    if (getters.win) {
+      dispatch("gameWon");
+    }
+  },
+
+  openArea({ dispatch, getters }, [row, column]) {
+    const cell = getters.area[row][column];
+    if (cell.around.bombs != cell.around.flags) return alert("denied");
 
     const cells = cell.surroundedCells;
     const correclyPutFlags = cells.every(cell => (
       cell.isBomb ? cell.isBomb && cell.isFlag : true
     ));
-    if (!correclyPutFlags) return alert("Game over!");
+    if (!correclyPutFlags) return dispatch("gameOver");
 
     cells.forEach((cell) => {
       if (cell.isUnknown) {

@@ -2,9 +2,15 @@
 div
 
   p(
-      v-if="totalBombAmount!=0"
-      data-cy="totalBombAmount"
-    ) Total amount of bombs: {{totalBombAmount}}
+    v-if="config.playing"
+    data-cy="totalBombAmount"
+  ) Total amount of bombs: {{totalBombAmount}}
+  p(
+    v-if="config.playing"
+  ) Time: {{time}}
+  p(
+    v-if="config.playing"
+  ) Steps: {{steps}}
 
   table(
     cellpadding="0"
@@ -35,8 +41,11 @@ export default {
   },
   computed: {
     ...mapGetters({
-      area: "area/calculatedArea",
+      area: "area/area",
       totalBombAmount: "area/totalBombAmount",
+      time: "record/time",
+      steps: "record/steps",
+      config: "config/config",
     }),
   },
 };

@@ -145,8 +145,6 @@ export default {
           continue;
         }
 
-        console.log("Step");
-
         if (this.getBombsAmountAround(row, column) == 0) {
           checkedPositions.push([row, column]);
           this.openArea(row, column, checkedPositions);

@@ -36,7 +36,7 @@ describe("Testing user stories", () => {
       .click()
 
     cy.get("td").each((td) => {
-      expect(td).to.have.class("green")
+      expect(td).to.have.class("orange")
     })
 
     cy
@@ -44,7 +44,7 @@ describe("Testing user stories", () => {
       .click()
 
     cy.get("td").each((td) => {
-      expect(td).not.to.have.class("green")
+      expect(td).not.to.have.class("orange")
     })
   })
 

@@ -1,9 +1,9 @@
 <template lang="pug">
 div
     button(
-      @click="fillArea"
+      @click="startGame"
       data-cy="fillArea"
-    ) Fill the table
+    ) Start game
     button(
       @click="showBombs"
       data-cy="showMines"
@@ -22,11 +22,11 @@ export default {
   name: "GameActions",
   methods: {
     ...mapActions({
-      _fillArea: "area/fillArea",
+      _startGame: "area/startGame",
       _setConfig: "config/updateProperty",
     }),
-    fillArea() {
-      this._fillArea();
+    startGame() {
+      this._startGame();
     },
     showBombs() {
       this._setConfig({ property: "show.bombs" });

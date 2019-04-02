@@ -10,6 +10,7 @@ const state = {
     bombs: false,
     hints: false,
   },
+  playing: false,
 };
 
 export const getters = {
@@ -19,13 +20,13 @@ export const getters = {
   columns: state => state.columns,
   complexity: state => state.complexity,
   show: state => state.show,
-
+  playing: state => state.playing,
 
 };
 export const mutations = {
 
   updateProperty(state, { property, value }) {
-    if (!value) value = !_.get(state, property);
+    if (value === undefined) value = !_.get(state, property);
     _.set(state, property, value);
   },
 
