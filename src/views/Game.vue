@@ -1,8 +1,8 @@
 <template lang="pug">
 div
-  h1 Minesweeper
+  h1.q-display-1.text-center Minesweeper
 
-  GameConfig
+  GameConfig(v-if="!playing")
 
   GameActions
 
@@ -14,6 +14,7 @@ div
 import GameConfig from "@/components/game/Config";
 import GameActions from "@/components/game/Actions";
 import GameArea from "@/components/game/Area";
+import { mapGetters } from "vuex";
 
 export default {
   name: "Game",
@@ -22,5 +23,11 @@ export default {
     GameActions,
     GameArea,
   },
+  computed: {
+    ...mapGetters({
+      playing: "config/playing",
+    }),
+  },
+
 };
 </script>

@@ -72,14 +72,14 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 td {
 
     margin: 0;
     padding: 10px;
     border: 0.5px solid #000;
-    width: 20px;
-    height: 20px;
+    width: 40px;
+    height: 40px;
     display: inline-flex;
     justify-content: center;
 

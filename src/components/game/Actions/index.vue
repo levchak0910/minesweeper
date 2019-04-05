@@ -1,29 +1,45 @@
 <template lang="pug">
 div
-    button(
-      @click="startGame"
-      data-cy="fillArea"
-    ) Start game
-    button(
-      @click="showBombs"
-      data-cy="showMines"
-    ) Show bombs
-    button(
-      @click="hintArea"
-      data-cy="showMinesAround"
-    ) Show all cells
+
+    q-field.text-center
+      q-btn.q-ma-md(
+        label="New game"
+        @click="startGame"
+      )
+      q-btn.q-ma-md(
+        v-if="playing"
+        label="Stop game"
+        @click="stopGame"
+      )
+      br
+      q-btn.q-ma-md(
+        v-if="playing"
+        label="Show bombs"
+        @click="showBombs"
+      )
+      q-btn.q-ma-md(
+        v-if="playing"
+        label="Show all cells"
+        @click="hintArea"
+      )
 
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "GameActions",
+  computed: {
+    ...mapGetters({
+      playing: "config/playing",
+    }),
+  },
   methods: {
     ...mapActions({
       _startGame: "area/startGame",
       _setConfig: "config/updateProperty",
+      _endGame: "area/endGame",
     }),
     startGame() {
       this._startGame();
@@ -34,37 +50,9 @@ export default {
     hintArea() {
       this._setConfig({ property: "show.hints" });
     },
+    stopGame() {
+      this._endGame({ save: false });
+    },
   },
 };
 </script>
-
-<style lang="less">
-table {
-  border: 1px solid #000;
-
-  tr, td {
-    margin: 0;
-    padding: 10px;
-    border: 0.5px solid #000;
-  }
-
-  td {
-    width: 20px;
-    height: 20px;
-    display: inline-flex;
-    justify-content: center;
-
-  }
-}
-
-.gray {background: gray;}
-.white {background: white;}
-.red {background: red;}
-.green {background: green;}
-
-
-* {
-  cursor: default;
-  user-select: none;
-}
-</style>
