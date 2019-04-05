@@ -1,38 +1,40 @@
 <template lang="pug">
 div
-    h3 size of area:
-    p width:
-        input(
-            type="number"
-            :value.number="rows"
-            @change="setConfig('rows', $event.target.value)"
-            data-cy="width"
+    p.q-headline.text-center Config
+    div.text-center
+      p Width ✖ Height
+      p.flex.justify-center
+        ConfigNumberField(
+          :value="rows"
+          @update="setConfig('rows', $event)"
         )
-    p height:
-        input(
-            type="number"
-            :value.number="columns"
-            @change="setConfig('columns', $event.target.value)"
-            data-cy="height"
+        ConfigNumberField(
+          :value="columns"
+          @update="setConfig('columns', $event)"
         )
-    p complexity:
-        input(
-            type="number"
-            step="0.05"
-            min="0"
-            max="1"
-            :value.number="complexity"
-            @change="setConfig('complexity', $event.target.value)"
-            data-cy="complexity"
+
+      p Complexity
+        q-slider.q-my-md.q-mx-auto(
+          :value.number="complexity"
+          @change="setConfig('complexity', $event)"
+          :min="0.02"
+          :max="0.4"
+          :step="0.02"
+          color="grey"
+          style="width: 80%"
         )
 
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import ConfigNumberField from "./Field";
 
 export default {
   name: "GameConfig",
+  components: {
+    ConfigNumberField,
+  },
   computed: {
     ...mapGetters({
       rows: "config/rows",

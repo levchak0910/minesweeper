@@ -8,20 +8,20 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
+      path: "/",
+      redirect: "game",
+    },
+    {
       path: "/game",
-      component: () => import(/* webpackChunkName: "game" */ "./views/Game.vue"),
+      component: () => import(/* webpackChunkName: "game" */ "./views/Game"),
     },
     {
       path: "/about",
-      component: () => import(/* webpackChunkName: "about" */ "./views/About.vue"),
+      component: () => import(/* webpackChunkName: "about" */ "./views/About"),
     },
     {
       path: "/records",
-      component: () => import(/* webpackChunkName: "records" */ "./views/Records.vue"),
-    },
-    {
-      path: "*",
-      redirect: "/game",
+      component: () => import(/* webpackChunkName: "records" */ "./views/Records"),
     },
   ],
 });

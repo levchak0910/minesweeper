@@ -90,21 +90,19 @@ export const getters = {
   config: (s, g, rs, rootGetters) => rootGetters["config/config"],
   area: state => state.area,
 
-  win: (state) => {
-    const cells = _.flattenDeep(state.area);
-    const deminedAmount = cells.filter(c => c.isDemined).length;
-    const bombAmount = cells.filter(c => c.isBomb).length;
-    const cellsAmount = cells.length;
-
-    return deminedAmount + bombAmount == cellsAmount;
+  win(state, getters) {
+    const { cells, bombs, demined } = getters.totalAmount;
+    return demined + bombs == cells;
   },
 
-  totalBombAmount(state) {
-    return state.area.reduce((amount1, row) => (
-      amount1 + row.reduce((amount2, cell) => (
-        amount2 + Number(cell.isBomb)
-      ), 0)
-    ), 0);
+  totalAmount(state) {
+    const cells = _.flattenDeep(state.area);
+    return {
+      cells: cells.length,
+      bombs: cells.filter(c => c.isBomb).length,
+      demined: cells.filter(c => c.isDemined).length,
+      flags: cells.filter(c => c.isFlag).length,
+    };
   },
 
 };
@@ -201,10 +199,10 @@ export const actions = {
     setTimeout(() => alert("You win!"), 200);
     dispatch("endGame");
   },
-  endGame({ dispatch }) {
+  endGame({ dispatch }, { save = true } = {}) {
     dispatch("config/updateProperty", { property: "playing", value: false }, { root: true });
     dispatch("config/updateProperty", { property: "show.bombs", value: true }, { root: true });
-    dispatch("record/stopTimer", { save: true }, { root: true });
+    dispatch("record/stopTimer", { save }, { root: true });
   },
 
   checkWin({ getters, dispatch }) {
